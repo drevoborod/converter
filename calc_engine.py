@@ -121,8 +121,7 @@ class Count():
                         else:
                             exec(compile("self.digit1 = list(str({0} {1} {2}))".format(digit, self.operation, screen), {}, "exec"))
                     except OverflowError:
-### Разобраться! 1) Ошибки должны райзиться на уровень гуя
-### 2) После ошибки переполнения при вычислении буфер надо сбрасывать.
+### Разобраться! Ошибки должны райзиться на уровень гуя
                         self.screen = "Error"
                         self.vars_clear()
                     else:
