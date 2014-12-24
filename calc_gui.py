@@ -13,9 +13,6 @@ class MainGui():
         self.frames()
         self.indicator()
         self.number_buttons()
-        self.function_buttons()
-        # Инициализируем движок калькулятора:
-        self.calc = calc_engine.Count()
 
     def indicator(self):
         self.indicator = tkinter.Label(text="0", anchor="w", height=1, width=21, font="Arial 20", relief="sunken")
@@ -64,49 +61,6 @@ class MainGui():
             exec(compile("self.button{0}.grid(row=coords[{0}][0], column=coords[{0}][1])".format(number), {}, "exec"))
             
             
-    def function_buttons(self):
-        coords = self.coords_list(2, 4)
-        for number in reversed(range(14, 20)):
-            exec(compile("self.image{0} = tkinter.PhotoImage(file='./images/calc/{0}.gif')".format(number), {}, "exec"))
-            exec(compile("self.button{0} = tkinter.Button(self.frame4, image=self.image{0}, width=75, height=110, relief='raised', command=self.act_button{0})".format(number), {}, "exec"))
-            exec(compile("self.button{0}.grid(row=coords[{1}][0], column=coords[{1}][1])".format(number, number-12), {}, "exec"))
-        # "=":
-        self.image12 = tkinter.PhotoImage(file='./images/calc/12.gif')
-        self.button12 = tkinter.Button(self.frame4, image=self.image12, width=150, height=110, relief='raised', command=self.act_button12)
-        self.button12.grid(row=3, columnspan=2)
-        # "C":
-        self.image13 = tkinter.PhotoImage(file='./images/calc/13.gif')
-        self.button13 = tkinter.Button(self.frame5, image=self.image13, width=123, height=110, relief='raised', command=self.act_button13)
-        self.button13.grid(row=0, column=0)
-        # "<-":
-        self.image20 = tkinter.PhotoImage(file='./images/calc/20.gif')
-        self.button20 = tkinter.Button(self.frame5, image=self.image20, width=123, height=110, relief='raised', command=self.act_button20)
-        self.button20.grid(row=0, column=1)
-
-  
-    def button_action(self, button_number):
-        self.write_button(button_number)
-        if button_number in range(0, 12):
-            try:
-                self.calc.screen_append_symbol(self.buttons_dict[button_number])
-                self.calc.last_button = 0
-            except calc_engine.CalcEngineErrors:
-                pass    # Здесь будет всплывающее окно.
-        elif button_number in range(14, 20):
-            ###D:
-            # print("Operation from dict:", self.oper_buttons_dict[button_number])
-            ####
-            self.calc.arifm_operation(self.oper_buttons_dict[button_number])
-            self.calc.last_button = 1
-        elif button_number == 20:
-            self.calc.screen_backspace()
-            self.calc.last_button = 0
-        elif button_number == 13:
-            self.calc.all_clear()
-        elif button_number == 12:
-            self.calc.result()
-            self.calc.last_button = 1
-        self.change_indicator()
 
     def change_indicator(self):
         ##d
@@ -161,9 +115,71 @@ class MainGui():
     def act_button20(self):
         self.button_action(20)
     
+class Calculator(MainGui):
+    def __init__(self):
+        MainGui.__init__(self)
+        self.function_buttons()
+        # Инициализируем движок калькулятора:
+        self.calc = calc_engine.Count()
+
+
+    def function_buttons(self):
+        coords = self.coords_list(2, 4)
+        for number in reversed(range(14, 20)):
+            exec(compile("self.image{0} = tkinter.PhotoImage(file='./images/calc/{0}.gif')".format(number), {}, "exec"))
+            exec(compile("self.button{0} = tkinter.Button(self.frame4, image=self.image{0}, width=75, height=110, relief='raised', command=self.act_button{0})".format(number), {}, "exec"))
+            exec(compile("self.button{0}.grid(row=coords[{1}][0], column=coords[{1}][1])".format(number, number-12), {}, "exec"))
+        # "=":
+        self.image12 = tkinter.PhotoImage(file='./images/calc/12.gif')
+        self.button12 = tkinter.Button(self.frame4, image=self.image12, width=150, height=110, relief='raised', command=self.act_button12)
+        self.button12.grid(row=3, columnspan=2)
+        # "C":
+        self.image13 = tkinter.PhotoImage(file='./images/calc/13.gif')
+        self.button13 = tkinter.Button(self.frame5, image=self.image13, width=123, height=110, relief='raised', command=self.act_button13)
+        self.button13.grid(row=0, column=0)
+        # "<-":
+        self.image20 = tkinter.PhotoImage(file='./images/calc/20.gif')
+        self.button20 = tkinter.Button(self.frame5, image=self.image20, width=123, height=110, relief='raised', command=self.act_button20)
+        self.button20.grid(row=0, column=1)
+
+
+    def button_action(self, button_number):
+        self.write_button(button_number)
+        if button_number in range(0, 12):
+            try:
+                self.calc.screen_append_symbol(self.buttons_dict[button_number])
+                self.calc.last_button = 0
+            except calc_engine.CalcEngineErrors:
+                pass    # Здесь будет всплывающее окно.
+        elif button_number in range(14, 20):
+            ###D:
+            # print("Operation from dict:", self.oper_buttons_dict[button_number])
+            ####
+            self.calc.arifm_operation(self.oper_buttons_dict[button_number])
+            self.calc.last_button = 1
+        elif button_number == 20:
+            self.calc.screen_backspace()
+            self.calc.last_button = 0
+        elif button_number == 13:
+            self.calc.all_clear()
+        elif button_number == 12:
+            self.calc.result()
+            self.calc.last_button = 1
+        self.change_indicator()
+
+class Converter(MainGui):
+    def __init__(self):
+        MainGui.__init__()
+
+def select_gui(menu_item):
+    if menu_item == 0:
+        return Calculator()
+    elif menu_item == 1:
+        return Converter()
+
 
 if __name__ == "__main__":
     #pdb.set_trace()
     root = tkinter.Tk()
-    morda = MainGui()
+    gui = select_gui(0)
     root.mainloop()
