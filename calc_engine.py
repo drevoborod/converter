@@ -194,10 +194,15 @@ class Count():
         print("Source:", a_list)
 ##
         """Превращает список a_list в строку."""
-        joined = float("".join(map(str, a_list)))
-        if joined.is_integer():
-            joined = int(joined)
-        return str(joined)
+        joined = "".join(map(str, a_list))
+        try:
+            f_joined = float(joined)
+        except:
+            return joined
+        else:
+            if f_joined.is_integer():
+                joined = int(f_joined)
+            return str(joined)
             
 if __name__ == "__main__":
     calc = Count()
