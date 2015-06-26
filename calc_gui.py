@@ -1,6 +1,6 @@
 #!/usr/bin/python3
+# -*- coding: utf-8 -*-
 
-#import pdb
 import tkinter
 import convert
 import calc_engine
@@ -54,10 +54,10 @@ class MainGui():
         coords = self.coords_list(3, 5)
         #создаём переменные класса для каждой кнопки и размещаем их:
         for number in reversed(range(0, 12)):
-            exec(compile("self.image{0} = tkinter.PhotoImage(file='./images/calc/{0}.gif')".format(number), {}, "exec")) 
-            exec(compile("self.button{0} = tkinter.Button(self.frame3, image=self.image{0}, width=123, height=110, relief='raised', command=self.act_button{0})".format(number), {}, "exec"))
-#            Дохлый пример, попытаться допилить в будущем:
- #           exec(compile("self.button{0} = tkinter.Button(self.frame3, image=self.image{0}, width=123, height=110, relief='raised', command=lambda: self.button_action({0}))".format(number), {}, "exec"))
+            setattr(self, "image%d" % number, tkinter.PhotoImage(file='./images/calc/%d.gif' % number))
+            #setattr(self, "button%d" % number, tkinter.Button(self.frame3, image=self.image{0}, width=123, height=110, relief='raised', command=(lambda: self.button_action({0}))))
+            #exec(compile("self.image{0} = tkinter.PhotoImage(file='./images/calc/{0}.gif')".format(number), {}, "exec"))
+            exec(compile("self.button{0} = tkinter.Button(self.frame3, image=self.image{0}, width=123, height=110, relief='raised', command=(lambda: self.button_action({0})))".format(number), {}, "exec"))
             exec(compile("self.button{0}.grid(row=coords[{0}][0], column=coords[{0}][1])".format(number), {}, "exec"))
             
             
@@ -71,7 +71,7 @@ class MainGui():
 
     def write_button(self, button):
         print("button %d pressed" % button)
-
+"""
     def act_button0(self):
         self.button_action(0)
     def act_button1(self):
@@ -114,7 +114,7 @@ class MainGui():
         self.button_action(19)
     def act_button20(self):
         self.button_action(20)
-    
+"""
 class Calculator(MainGui):
     def __init__(self):
         MainGui.__init__(self)
@@ -126,20 +126,21 @@ class Calculator(MainGui):
     def function_buttons(self):
         coords = self.coords_list(2, 4)
         for number in reversed(range(14, 20)):
-            exec(compile("self.image{0} = tkinter.PhotoImage(file='./images/calc/{0}.gif')".format(number), {}, "exec"))
-            exec(compile("self.button{0} = tkinter.Button(self.frame4, image=self.image{0}, width=75, height=110, relief='raised', command=self.act_button{0})".format(number), {}, "exec"))
+            #exec(compile("self.image{0} = tkinter.PhotoImage(file='./images/calc/{0}.gif')".format(number), {}, "exec"))
+            setattr(self, "image%d" % number, tkinter.PhotoImage(file='./images/calc/%d.gif' % number))
+            exec(compile("self.button{0} = tkinter.Button(self.frame4, image=self.image{0}, width=75, height=110, relief='raised', command=(lambda: self.button_action({0})))".format(number), {}, "exec"))
             exec(compile("self.button{0}.grid(row=coords[{1}][0], column=coords[{1}][1])".format(number, number-12), {}, "exec"))
         # "=":
         self.image12 = tkinter.PhotoImage(file='./images/calc/12.gif')
-        self.button12 = tkinter.Button(self.frame4, image=self.image12, width=150, height=110, relief='raised', command=self.act_button12)
+        self.button12 = tkinter.Button(self.frame4, image=self.image12, width=150, height=110, relief='raised', command=(lambda: self.button_action(12)))
         self.button12.grid(row=3, columnspan=2)
         # "C":
         self.image13 = tkinter.PhotoImage(file='./images/calc/13.gif')
-        self.button13 = tkinter.Button(self.frame5, image=self.image13, width=123, height=110, relief='raised', command=self.act_button13)
+        self.button13 = tkinter.Button(self.frame5, image=self.image13, width=123, height=110, relief='raised', command=(lambda: self.button_action(13)))
         self.button13.grid(row=0, column=0)
         # "<-":
         self.image20 = tkinter.PhotoImage(file='./images/calc/20.gif')
-        self.button20 = tkinter.Button(self.frame5, image=self.image20, width=123, height=110, relief='raised', command=self.act_button20)
+        self.button20 = tkinter.Button(self.frame5, image=self.image20, width=123, height=110, relief='raised', command=(lambda: self.button_action(20)))
         self.button20.grid(row=0, column=1)
 
 
@@ -179,7 +180,6 @@ def select_gui(menu_item):
 
 
 if __name__ == "__main__":
-    #pdb.set_trace()
     root = tkinter.Tk()
     gui = select_gui(0)
     root.mainloop()
