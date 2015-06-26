@@ -57,6 +57,8 @@ class MainGui():
         for number in reversed(range(0, 12)):
             setattr(self, "image%d" % number, tkinter.PhotoImage(file='./images/calc/%d.gif' % number))
             exec("self.button{0} = tkinter.Button(self.frame3, image=self.image{0}, width=123, height=110, relief='raised', command=(lambda: self.button_action({0})))".format(number))
+            #exec("self.button{0} = tkinter.Button(self.frame3, image=self.image{0}, width=123, height=110, relief='raised', command=self.button_action({0}))".format(number))
+
             exec("self.button{0}.grid(row=coords[{0}][0], column=coords[{0}][1])".format(number))
             
             
