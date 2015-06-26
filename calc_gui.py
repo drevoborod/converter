@@ -1,10 +1,10 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import tkinter
 import convert
 import calc_engine
-import types
+import functools
 
 class MainGui():
     buttons_dict = {0: 0, 1: ".", 2: "-", 3: 1, 4: 2, 5: 3, 6: 4, 7: 5, 8: 6, 9: 7, 10: 8, 11: 9}
@@ -34,7 +34,6 @@ class MainGui():
         self.frame3.grid(row=0, column=0)
         self.frame4.grid(row=0, column=1)
 
-        
     def coords_list(self, x_count, y_count):
         """Функция возвращает список кортежей координат объектов для 
         сетки заданного размера."""
@@ -55,21 +54,15 @@ class MainGui():
         coords = self.coords_list(3, 5)
         #создаём переменные класса для каждой кнопки и размещаем их:
         for number in reversed(range(0, 12)):
+            # Создание объекта метода с передачей ему параметра:
+            action = functools.partial(self.button_action, number)
             setattr(self, "image%d" % number, tkinter.PhotoImage(file='./images/calc/%d.gif' % number))
-            exec("self.button{0} = tkinter.Button(self.frame3, image=self.image{0}, width=123, height=110, relief='raised', command=(lambda: self.button_action({0})))".format(number))
-            #exec("self.button{0} = tkinter.Button(self.frame3, image=self.image{0}, width=123, height=110, relief='raised', command=self.button_action({0}))".format(number))
-
+            exec("self.button{0} = tkinter.Button(self.frame3, image=self.image{0}, width=123, height=110, relief='raised', command=action)".format(number))
             exec("self.button{0}.grid(row=coords[{0}][0], column=coords[{0}][1])".format(number))
             
-            
-
     def change_indicator(self):
-        ##d
-        #print(self.calc.screen)
-        ##
         self.indicator.configure(text=self.calc.join_list(self.calc.screen[:]))
         
-
     def write_button(self, button):
         print("button %d pressed" % button)
 
@@ -85,8 +78,9 @@ class Calculator(MainGui):
     def function_buttons(self):
         coords = self.coords_list(2, 4)
         for number in reversed(range(14, 20)):
+            action = functools.partial(self.button_action, number)
             setattr(self, "image%d" % number, tkinter.PhotoImage(file='./images/calc/%d.gif' % number))
-            exec("self.button{0} = tkinter.Button(self.frame4, image=self.image{0}, width=75, height=110, relief='raised', command=(lambda: self.button_action({0})))".format(number))
+            exec("self.button{0} = tkinter.Button(self.frame4, image=self.image{0}, width=75, height=110, relief='raised', command=action)".format(number))
             exec("self.button{0}.grid(row=coords[{1}][0], column=coords[{1}][1])".format(number, number-12))
         # "=":
         self.image12 = tkinter.PhotoImage(file='./images/calc/12.gif')
@@ -111,9 +105,6 @@ class Calculator(MainGui):
             except calc_engine.CalcEngineErrors:
                 pass    # Здесь будет всплывающее окно.
         elif button_number in range(14, 20):
-            ###D:
-            # print("Operation from dict:", self.oper_buttons_dict[button_number])
-            ####
             self.calc.arifm_operation(self.oper_buttons_dict[button_number])
             self.calc.last_button = 1
         elif button_number == 20:

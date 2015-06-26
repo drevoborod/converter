@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 class CalcEngineErrors(Exception): pass
@@ -66,12 +66,6 @@ class Count():
                         else:
                             self.screen.append(symbol)
 
-
-                ##debug:
-                # print("Self.screen:", self.screen)
-                ##
-
-        
     def screen_backspace(self):
         """Удалить один символ. Если он один, то обнулить screen."""
         if self.to_clear == 1:
@@ -121,7 +115,7 @@ class Count():
                         else:
                             exec(compile("self.digit1 = list(str({0} {1} {2}))".format(digit, self.operation, screen), {}, "exec"))
                     except OverflowError:
-### Разобраться! Ошибки должны райзиться на уровень гуя
+### ToDo: Разобраться! Ошибки должны райзиться на уровень гуя
                         self.screen = "Error"
                         self.vars_clear()
                     else:
@@ -200,11 +194,12 @@ class Count():
         return str(joined)
             
 if __name__ == "__main__":
-    calc = Count()
-    
+
     def screen():
         print(calc.join_list(calc.screen[:]))
-        
+
+    calc = Count()
+
     while True:
         screen()
         digit = input("Введите число: ")
