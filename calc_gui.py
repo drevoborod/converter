@@ -4,6 +4,7 @@
 import tkinter
 import convert
 import calc_engine
+import types
 
 class MainGui():
     buttons_dict = {0: 0, 1: ".", 2: "-", 3: 1, 4: 2, 5: 3, 6: 4, 7: 5, 8: 6, 9: 7, 10: 8, 11: 9}
@@ -55,10 +56,8 @@ class MainGui():
         #создаём переменные класса для каждой кнопки и размещаем их:
         for number in reversed(range(0, 12)):
             setattr(self, "image%d" % number, tkinter.PhotoImage(file='./images/calc/%d.gif' % number))
-            #setattr(self, "button%d" % number, tkinter.Button(self.frame3, image=self.image{0}, width=123, height=110, relief='raised', command=(lambda: self.button_action({0}))))
-            #exec(compile("self.image{0} = tkinter.PhotoImage(file='./images/calc/{0}.gif')".format(number), {}, "exec"))
-            exec(compile("self.button{0} = tkinter.Button(self.frame3, image=self.image{0}, width=123, height=110, relief='raised', command=(lambda: self.button_action({0})))".format(number), {}, "exec"))
-            exec(compile("self.button{0}.grid(row=coords[{0}][0], column=coords[{0}][1])".format(number), {}, "exec"))
+            exec("self.button{0} = tkinter.Button(self.frame3, image=self.image{0}, width=123, height=110, relief='raised', command=(lambda: self.button_action({0})))".format(number))
+            exec("self.button{0}.grid(row=coords[{0}][0], column=coords[{0}][1])".format(number))
             
             
 
@@ -71,50 +70,8 @@ class MainGui():
 
     def write_button(self, button):
         print("button %d pressed" % button)
-"""
-    def act_button0(self):
-        self.button_action(0)
-    def act_button1(self):
-        self.button_action(1)
-    def act_button2(self):
-        self.button_action(2)
-    def act_button3(self):
-        self.button_action(3)
-    def act_button4(self):
-        self.button_action(4)
-    def act_button5(self):
-        self.button_action(5)
-    def act_button6(self):
-        self.button_action(6)
-    def act_button7(self):
-        self.button_action(7)
-    def act_button8(self):
-        self.button_action(8)
-    def act_button9(self):
-        self.button_action(9)
-    def act_button10(self):
-        self.button_action(10)
-    def act_button11(self):
-        self.button_action(11)
-    def act_button12(self):
-        self.button_action(12)
-    def act_button13(self):
-        self.button_action(13)
-    def act_button14(self):
-        self.button_action(14)
-    def act_button15(self):
-        self.button_action(15)
-    def act_button16(self):
-        self.button_action(16)
-    def act_button17(self):
-        self.button_action(17)
-    def act_button18(self):
-        self.button_action(18)
-    def act_button19(self):
-        self.button_action(19)
-    def act_button20(self):
-        self.button_action(20)
-"""
+
+
 class Calculator(MainGui):
     def __init__(self):
         MainGui.__init__(self)
@@ -126,10 +83,9 @@ class Calculator(MainGui):
     def function_buttons(self):
         coords = self.coords_list(2, 4)
         for number in reversed(range(14, 20)):
-            #exec(compile("self.image{0} = tkinter.PhotoImage(file='./images/calc/{0}.gif')".format(number), {}, "exec"))
             setattr(self, "image%d" % number, tkinter.PhotoImage(file='./images/calc/%d.gif' % number))
-            exec(compile("self.button{0} = tkinter.Button(self.frame4, image=self.image{0}, width=75, height=110, relief='raised', command=(lambda: self.button_action({0})))".format(number), {}, "exec"))
-            exec(compile("self.button{0}.grid(row=coords[{1}][0], column=coords[{1}][1])".format(number, number-12), {}, "exec"))
+            exec("self.button{0} = tkinter.Button(self.frame4, image=self.image{0}, width=75, height=110, relief='raised', command=(lambda: self.button_action({0})))".format(number))
+            exec("self.button{0}.grid(row=coords[{1}][0], column=coords[{1}][1])".format(number, number-12))
         # "=":
         self.image12 = tkinter.PhotoImage(file='./images/calc/12.gif')
         self.button12 = tkinter.Button(self.frame4, image=self.image12, width=150, height=110, relief='raised', command=(lambda: self.button_action(12)))
