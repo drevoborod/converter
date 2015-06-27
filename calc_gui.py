@@ -54,10 +54,8 @@ class MainGui():
         coords = self.coords_list(3, 5)
         #создаём переменные класса для каждой кнопки и размещаем их:
         for number in reversed(range(0, 12)):
-            # Создание объекта метода с передачей ему параметра:
-            action = functools.partial(self.button_action, number)
             setattr(self, "image%d" % number, tkinter.PhotoImage(file='./images/calc/%d.gif' % number))
-            exec("self.button{0} = tkinter.Button(self.frame3, image=self.image{0}, width=123, height=110, relief='raised', command=action)".format(number))
+            exec("self.button{0} = tkinter.Button(self.frame3, image=self.image{0}, width=123, height=110, relief='raised', command=functools.partial(self.button_action, number))".format(number))
             exec("self.button{0}.grid(row=coords[{0}][0], column=coords[{0}][1])".format(number))
             
     def change_indicator(self):
@@ -78,9 +76,8 @@ class Calculator(MainGui):
     def function_buttons(self):
         coords = self.coords_list(2, 4)
         for number in reversed(range(14, 20)):
-            action = functools.partial(self.button_action, number)
             setattr(self, "image%d" % number, tkinter.PhotoImage(file='./images/calc/%d.gif' % number))
-            exec("self.button{0} = tkinter.Button(self.frame4, image=self.image{0}, width=75, height=110, relief='raised', command=action)".format(number))
+            exec("self.button{0} = tkinter.Button(self.frame4, image=self.image{0}, width=75, height=110, relief='raised', command=functools.partial(self.button_action, number))".format(number))
             exec("self.button{0}.grid(row=coords[{1}][0], column=coords[{1}][1])".format(number, number-12))
         # "=":
         self.image12 = tkinter.PhotoImage(file='./images/calc/12.gif')
