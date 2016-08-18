@@ -31,11 +31,15 @@ class FromXtoY:
         except ValueError:
             raise ConverterError
         else:
-            if self.base_from == self.base_to:
+            if (self.base_from == self.base_to) or (self.base_from not in range(2, 1001)) or (self.base_to not in range(2, 1001)):
                 raise ConverterError
         self.separator = "|"  # Разделитель разрядов
 
     def conversion(self, digit):
+        minus = False
+        if digit.startswith("-"):
+            minus = True
+            digit = digit.lstrip("-")
         ## Разбиваем строку на целое и дробную часть:
         if "." in digit:
             digit_splitted = digit.split(".")
@@ -47,7 +51,10 @@ class FromXtoY:
         n = self.to_dec(digit_splitted)
         # Перевод из десятичной - в конечную:
         r = self.from_dec(n)
-        return r
+        if minus:
+            return "-" + r
+        else:
+            return r
 
     def check_base(self, digit):
         """Проверка того, что число в приведённой системе счисления
