@@ -17,9 +17,7 @@
 import sys
 
 
-class ConverterError(Exception):
-    def __str__(self):
-        return "Введённые данные неверны!"
+class ConverterError(Exception): pass
 
 
 class FromXtoY:
@@ -27,10 +25,14 @@ class FromXtoY:
     """
 
     def __init__(self, base_from, base_to):
-        self.base_from = int(base_from)
-        self.base_to = int(base_to)
-        if self.base_from == self.base_to:
+        try:
+            self.base_from = int(base_from)
+            self.base_to = int(base_to)
+        except ValueError:
             raise ConverterError
+        else:
+            if self.base_from == self.base_to:
+                raise ConverterError
         self.separator = "|"  # Разделитель разрядов
 
     def conversion(self, digit):
@@ -101,10 +103,10 @@ class FromXtoY:
             r = float(str(r0) + "." + str(r1).split(".")[1])
         else:
             r = float(r0)
-        # Форматируем строку так, чтобы запись всегда была вида "1.1":
-        r_f = "%f" % r
-        return r_f  # Возвращаем строку, чтобы избежать преобразований
-        # в другой формат записи (0x12345e-01).
+        # Форматируем строку так, чтобы запись всегда была вида "1.1" и
+        # возвращаем строку, чтобы избежать преобразований
+        # в другой формат записи (например, 0x12345e-01):
+        return "%f" % r
 
     def from_dec(self, digit):
         """ Функция для перевода из десятичной системы в заданную.
@@ -160,7 +162,10 @@ class FromXtoY:
                     s = float("0" + "." + r[1])
             r1 = self.separator.join(mem)
         # Возвращаем конечный результат, объединив целую и дробную части.
-        return r0 + "." + r1
+        if r1 == "0":
+            return r0
+        else:
+            return r0 + "." + r1
 
 
 class Messages:
@@ -182,7 +187,7 @@ class Messages:
 
 
 def exit_script(mess):
-    print("\n" + str(mess))
+    print("\n" + mess)
     sys.exit(0)
 
 
@@ -195,12 +200,12 @@ if __name__ == "__main__":
     # Класс, отвечающий за сообщения пользователю:
     m = Messages()
     try:
-        s = m.sel_message()  # s = (Исходная, конечная, число)
+        s = m.sel_message()  # s = (Исходная система счисления, конечная, число)
         # Инициализируем счётный класс, передаём ему основания систем счисления:
         conv = FromXtoY(s[0], s[1])
         # Запускаем функцию перевода:
         res = conv.conversion(s[2])
-    except ConverterError as err:
-        exit_script(err)
+    except ConverterError:
+        exit_script("Введённые данные некорректны!")
     else:
         print("Результат: ", res)
