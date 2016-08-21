@@ -55,4 +55,5 @@ class DropdownMenu(ttk.Combobox):
         self.current(0)
 
 
-if __name__ == "__main__": MainWindow()
+if __name__ == "__main__":
+    MainWindow()
